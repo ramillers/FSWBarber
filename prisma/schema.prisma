@@ -1,0 +1,51 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String    @id @default(uuid())
+  email     String
+  name      String
+  bookings  Booking[] //relação mostrando q o usuário vai ter várias agendamentos
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+}
+
+model Barbershop {
+  id          String              @id @default(uuid())
+  name        String
+  adress      String
+  phones      String[] //lista de telefones
+  description String
+  imageURL    String
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  services    BarbershopService[] //relation one to many
+}
+
+model BarbershopService {
+  id           String     @id @default(uuid())
+  name         String
+  description  String
+  imageURL     String
+  price        Decimal    @db.Decimal(10, 2) //10 casas antes da vírgula e 2 dps 
+  barberShopId String
+  barbershop   Barbershop @relation(fields: [barberShopId], references: [id]) //barbershop id referencia o campo id da tabela barbershop 
+  bookings     Booking[] //1 serviço pode ter vários agendamentos de diferentes usuários 
+}
+
+model Booking {
+  id        String            @id @default(uuid())
+  userId    String
+  User      User              @relation(fields: [userId], references: [id])
+  serviceId String
+  service   BarbershopService @relation(fields: [serviceId], references: [id])
+  date      DateTime
+  createdAt DateTime          @default(now())
+  updatedAt DateTime          @updatedAt
+}
