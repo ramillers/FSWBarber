@@ -19,10 +19,10 @@ model User {
 model Barbershop {
   id          String              @id @default(uuid())
   name        String
-  adress      String
+  address     String
   phones      String[] //lista de telefones
   description String
-  imageURL    String
+  imageUrl    String
   createdAt   DateTime            @default(now())
   updatedAt   DateTime            @updatedAt
   services    BarbershopService[] //relation one to many
@@ -32,7 +32,7 @@ model BarbershopService {
   id           String     @id @default(uuid())
   name         String
   description  String
-  imageURL     String
+  imageUrl     String
   price        Decimal    @db.Decimal(10, 2) //10 casas antes da vírgula e 2 dps 
   barberShopId String
   barbershop   Barbershop @relation(fields: [barberShopId], references: [id]) //barbershop id referencia o campo id da tabela barbershop 
